@@ -276,9 +276,9 @@ leader       = standings.iloc[0] if len(standings) and len(played_df) else None
 # ─── HERO ─────────────────────────────────────────────────────────────────────────
 st.markdown(f"""
 <div class="hero-wrap">
+    <div class="hero-title">Amici del Tennis <span>Challenge</span></div>
+    <div class="hero-badge">Prima edizione</div>
     <div class="hero-badge">🎾 Cemento · 2026</div>
-    <div class="hero-title">Prima edizione <span>Amici del Tennis</span></div>
-    <div class="hero-sub">{len(players_list)} giocatori</div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -427,10 +427,22 @@ with tab3:
     with col_pend:
         st.markdown('<div class="sec-lbl">Da Giocare</div>', unsafe_allow_html=True)
         if len(pending_df) == 0:
-            st.markdown('<div class="glass-group"><div class="grow" style="justify-content:center"><span class="pill pg">🎉 Tutto completato!</span></div></div>', unsafe_allow_html=True)
+            st.markdown(
+                '<div class="glass-group"><div class="grow" style="justify-content:center"><span class="pill pg">🎉 Tutto completato!</span></div></div>',
+                unsafe_allow_html=True)
         else:
             st.markdown('<div class="glass-group">', unsafe_allow_html=True)
             for _, r in pending_df.sort_values("match_id").iterrows():
+                # --- LOGICA DATA/ORA ---
+                d_raw = clean(r.get("data", ""))
+                o_raw = clean(r.get("orario", ""))
+
+                if (d_raw in ["01/01/1900", ""]) and (o_raw in ["00:00", ""]):
+                    info_tempo = "Da definire"
+                else:
+                    info_tempo = f"{d_raw} · {o_raw}"
+                # -----------------------
+
                 st.markdown(
                     f'<div class="grow">'
                     f'<div class="mbadge">M{int(r["match_id"]):02d}</div>'
@@ -438,13 +450,51 @@ with tab3:
                     '<div class="mnames">'
                     f'<span>{r["player1"]}</span><span class="vs">vs</span><span>{r["player2"]}</span>'
                     '</div>'
-                    f'<div class="msub">{clean(r.get("data",""))} · {clean(r.get("orario",""))}</div>'
+                    f'<div class="msub">{info_tempo}</div>'
                     '</div>'
                     '<span class="pill pn">⏳</span>'
                     '</div>',
                     unsafe_allow_html=True
                 )
             st.markdown('</div>', unsafe_allow_html=True)
+
+    with col_full:
+        st.markdown('<div class="sec-lbl">Calendario Completo</div>', unsafe_allow_html=True)
+        st.markdown('<div class="glass-group">', unsafe_allow_html=True)
+        for _, r in df.sort_values("match_id").iterrows():
+            done = clean(r.get("vincitore", "")) != ""
+            p1c = "w" if done and clean(r["vincitore"]) == r["player1"] else ("l" if done else "")
+            p2c = "w" if done and clean(r["vincitore"]) == r["player2"] else ("l" if done else "")
+            right = f'<span class="pill pg">✓ {clean(r["vincitore"])}</span>' if done else '<span class="pill pn">⏳</span>'
+
+            # --- STESSA LOGICA APPLICATA QUI ---
+            if done:
+                score_label = fmt_sets(r)
+            else:
+                d_raw = clean(r.get("data", ""))
+                o_raw = clean(r.get("orario", ""))
+                if (d_raw in ["01/01/1900", ""]) and (o_raw in ["00:00", ""]):
+                    score_label = "Da definire"
+                else:
+                    score_label = f"{d_raw} · {o_raw}"
+            # -----------------------------------
+
+            st.markdown(
+                f'<div class="grow" style="opacity:{"1" if done else "0.5"}">'
+                f'<div class="mbadge">M{int(r["match_id"]):02d}</div>'
+                '<div class="mcenter">'
+                '<div class="mnames">'
+                f'<span class="{p1c}">{r["player1"]}</span>'
+                '<span class="vs">vs</span>'
+                f'<span class="{p2c}">{r["player2"]}</span>'
+                '</div>'
+                f'<div class="msub">{score_label}</div>'
+                '</div>'
+                + right +
+                '</div>',
+                unsafe_allow_html=True
+            )
+        st.markdown('</div>', unsafe_allow_html=True)
 
     with col_full:
         st.markdown('<div class="sec-lbl">Calendario Completo</div>', unsafe_allow_html=True)
