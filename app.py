@@ -431,8 +431,10 @@ if leader is not None:
 
 # ─── TABS ─────────────────────────────────────────────────────────────────────────
 # Added "Finali" to the tab list
-tab1, tab2, tab3, tab4, tab5 = st.tabs(
-    ["Classifica", "Risultati", "Partite rimanenti", "Statistiche", "Finali (Provvisorio)"])
+#tab1, tab2, tab3, tab4, tab5 = st.tabs(
+#    ["Classifica", "Risultati", "Partite rimanenti", "Statistiche", "Finali (Provvisorio)"])
+tab1, tab2, tab3, tab4 = st.tabs(
+    ["Classifica", "Risultati", "Partite rimanenti", "Statistiche"])
 
 # ══════════════════════════════════════════════════════
 # TAB 1 — CLASSIFICA
