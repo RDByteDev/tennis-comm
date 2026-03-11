@@ -46,7 +46,7 @@ html, body, [class*="css"], .stApp {
     background: rgba(99,179,237,0.15); border: 1px solid rgba(99,179,237,0.3);
     border-radius: 20px; padding: 4px 12px;
     font-size: 11px; font-weight: 600; color: #63B3ED;
-    letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 12px;
+    letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 2px;margin-top: 10px;
 }
 .hero-title {
     font-size: clamp(32px, 5vw, 42px); font-weight: 800;
