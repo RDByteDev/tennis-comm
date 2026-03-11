@@ -98,7 +98,7 @@ html, body, [class*="css"], .stApp {
 
 /* ── SECTION LABEL ── */
 .sec-lbl {
-    font-size: 11px;
+    font-size: 15px;
     font-weight: 700;
     color: #FFD60A;   /* yellow */
     text-transform: uppercase;
@@ -352,7 +352,7 @@ with col_ref:
 
 # ─── TABS ─────────────────────────────────────────────────────────────────────────
 # Added "Finali" to the tab list
-tab1, tab2, tab3, tab4, tab5 = st.tabs(["Classifica", "Risultati", "Calendario", "Statistiche", "Finali"])
+tab1, tab2, tab3, tab4, tab5 = st.tabs(["Classifica", "Risultati", "Partite rimanenti", "Statistiche", "Finali"])
 
 # ══════════════════════════════════════════════════════
 # TAB 1 — CLASSIFICA
@@ -361,7 +361,7 @@ with tab1:
     if len(played_df) == 0:
         st.markdown('<div style="padding:32px 20px;text-align:center"><p>Nessun risultato nel CSV ancora</p></div>', unsafe_allow_html=True)
     else:
-        st.markdown('<div class="sec-lbl">Classifica Generale</div>', unsafe_allow_html=True)
+        #st.markdown('<div class="sec-lbl">Classifica Generale</div>', unsafe_allow_html=True)
         st.markdown('<div class="glass-group">', unsafe_allow_html=True)
         max_pts = max(standings["Pts"].max(), 1)
         for i, row in standings.iterrows():
@@ -396,7 +396,7 @@ with tab1:
             )
         st.markdown('</div>', unsafe_allow_html=True)
 
-        st.markdown('<div class="sec-lbl">Distribuzione Punti</div>', unsafe_allow_html=True)
+        #st.markdown('<div class="sec-lbl">Distribuzione Punti</div>', unsafe_allow_html=True)
         fig = go.Figure()
         for i, (_, row) in enumerate(standings.iterrows()):
             fig.add_trace(go.Bar(
@@ -423,12 +423,12 @@ with tab2:
     if len(played_df) == 0:
         st.markdown('<div style="padding:32px 20px;text-align:center"><p>Nessuna partita giocata ancora</p></div>', unsafe_allow_html=True)
     else:
-        st.markdown('<div class="sec-lbl">Partite Giocate</div>', unsafe_allow_html=True)
+        #st.markdown('<div class="sec-lbl">Partite Giocate</div>', unsafe_allow_html=True)
         st.markdown('<div class="glass-group">', unsafe_allow_html=True)
         for _, r in played_df.sort_values("match_id", ascending=False).iterrows():
             p1, p2, w = r["player1"], r["player2"], clean(r["vincitore"])
-            c1 = "w" if w == p1 else "l"
-            c2 = "w" if w == p2 else "l"
+            c1 = "pill pg" if w == p1 else "l"
+            c2 = "pill pg" if w == p2 else "l"
             score = fmt_sets(r)
             st.markdown(
                 f'<div class="grow">'
@@ -440,8 +440,6 @@ with tab2:
                 f'<span class="{c2}">{p2}</span>'
                 '</div>'
                 f'<div class="msub">{score}</div>'
-                '</div>'
-                f'<span class="pill pg">✓ {w}</span>'
                 '</div>',
                 unsafe_allow_html=True
             )
@@ -454,7 +452,7 @@ with tab3:
     col_pend, col_full = st.columns(2)
 
     with col_pend:
-        st.markdown('<div class="sec-lbl">Da Giocare</div>', unsafe_allow_html=True)
+        #st.markdown('<div class="sec-lbl">Da Giocare</div>', unsafe_allow_html=True)
         if len(pending_df) == 0:
             st.markdown(
                 '<div class="glass-group"><div class="grow" style="justify-content:center"><span class="pill pg">🎉 Tutto completato!</span></div></div>',
@@ -481,75 +479,11 @@ with tab3:
                     '</div>'
                     f'<div class="msub">{info_tempo}</div>'
                     '</div>'
-                    '<span class="pill pn">⏳</span>'
+                    '<span class="pill pn" style="background: rgba(255,214,10,0.15); color: #FFD60A; border: 1px solid rgba(255,214,10,0.3);">⏳</span>'
                     '</div>',
                     unsafe_allow_html=True
                 )
             st.markdown('</div>', unsafe_allow_html=True)
-
-    with col_full:
-        st.markdown('<div class="sec-lbl">Calendario Completo</div>', unsafe_allow_html=True)
-        st.markdown('<div class="glass-group">', unsafe_allow_html=True)
-        for _, r in df.sort_values("match_id").iterrows():
-            done = clean(r.get("vincitore", "")) != ""
-            p1c = "w" if done and clean(r["vincitore"]) == r["player1"] else ("l" if done else "")
-            p2c = "w" if done and clean(r["vincitore"]) == r["player2"] else ("l" if done else "")
-            right = f'<span class="pill pg">✓ {clean(r["vincitore"])}</span>' if done else '<span class="pill pn">⏳</span>'
-
-            # --- STESSA LOGICA APPLICATA QUI ---
-            if done:
-                score_label = fmt_sets(r)
-            else:
-                d_raw = clean(r.get("data", ""))
-                o_raw = clean(r.get("orario", ""))
-                if (d_raw in ["01/01/1900", ""]) and (o_raw in ["00:00", ""]):
-                    score_label = "Da definire"
-                else:
-                    score_label = f"{d_raw} · {o_raw}"
-            # -----------------------------------
-
-            st.markdown(
-                f'<div class="grow" style="opacity:{"1" if done else "0.5"}">'
-                f'<div class="mbadge">M{int(r["match_id"]):02d}</div>'
-                '<div class="mcenter">'
-                '<div class="mnames">'
-                f'<span class="{p1c}">{r["player1"]}</span>'
-                '<span class="vs">vs</span>'
-                f'<span class="{p2c}">{r["player2"]}</span>'
-                '</div>'
-                f'<div class="msub">{score_label}</div>'
-                '</div>'
-                + right +
-                '</div>',
-                unsafe_allow_html=True
-            )
-        st.markdown('</div>', unsafe_allow_html=True)
-
-    with col_full:
-        st.markdown('<div class="sec-lbl">Calendario Completo</div>', unsafe_allow_html=True)
-        st.markdown('<div class="glass-group">', unsafe_allow_html=True)
-        for _, r in df.sort_values("match_id").iterrows():
-            done = clean(r.get("vincitore","")) != ""
-            p1c  = "w" if done and clean(r["vincitore"]) == r["player1"] else ("l" if done else "")
-            p2c  = "w" if done and clean(r["vincitore"]) == r["player2"] else ("l" if done else "")
-            right = f'<span class="pill pg">✓ {clean(r["vincitore"])}</span>' if done else '<span class="pill pn">⏳</span>'
-            score = fmt_sets(r) if done else f'{clean(r.get("data",""))} · {clean(r.get("orario",""))}'
-            st.markdown(
-                f'<div class="grow" style="opacity:{"1" if done else "0.5"}">'
-                f'<div class="mbadge">M{int(r["match_id"]):02d}</div>'
-                '<div class="mcenter">'
-                '<div class="mnames">'
-                f'<span class="{p1c}">{r["player1"]}</span>'
-                '<span class="vs">vs</span>'
-                f'<span class="{p2c}">{r["player2"]}</span>'
-                '</div>'
-                f'<div class="msub">{score}</div>'
-                '</div>'
-                + right +
-                '</div>',
-                unsafe_allow_html=True
-            )
-        st.markdown('</div>', unsafe_allow_html=True)
 
 # ══════════════════════════════════════════════════════
 # TAB 4 — STATISTICHE
@@ -558,8 +492,26 @@ with tab4:
     if len(played_df) == 0:
         st.markdown('<div style="padding:32px 20px;text-align:center"><p>Inserisci i risultati nel CSV per vedere le statistiche</p></div>', unsafe_allow_html=True)
     else:
-        st.markdown('<div class="sec-lbl">Seleziona Giocatore</div>', unsafe_allow_html=True)
-        sel = st.selectbox("", players_list, label_visibility="collapsed")
+        # Label sezione gialla
+        st.markdown('<div class="sec-lbl" style="color:#FFD60A;">Seleziona Giocatore</div>', unsafe_allow_html=True)
+
+        # Selectbox con sfondo giallo e testo scuro
+        st.markdown("""
+        <style>
+        div[data-testid="stSelectbox"] > div > div > div:first-child {
+            background-color: #FFD60A !important;  /* giallo */
+            color: #1A1A1A !important;             /* testo scuro */
+            border-radius: 8px !important;
+            padding-left: 8px !important;
+        }
+        div[data-testid="stSelectbox"] select {
+            background-color: #FFD60A !important;
+            color: #1A1A1A !important;
+        }
+        </style>
+        """, unsafe_allow_html=True)
+
+        sel = st.selectbox( "Seleziona Giocatore", players_list, label_visibility="collapsed")
 
         p_all    = df[(df["player1"] == sel) | (df["player2"] == sel)]
         p_played = p_all[p_all["vincitore"].apply(clean) != ""]
