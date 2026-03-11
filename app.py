@@ -76,25 +76,46 @@ html, body, [class*="css"], .stApp {
 .prog-fill { height: 3px; border-radius: 2px; background: linear-gradient(90deg, #63B3ED, #9F7AEA); }
 
 /* ── TABS ── */
+/* ── TABS COMPATTI ── */
 [data-testid="stTabs"] [role="tablist"] {
-    background: rgba(255,255,255,0.03) !important; padding: 0 16px !important;
-    gap: 0 !important; border-bottom: 1px solid rgba(255,255,255,0.08) !important;
-    overflow-x: auto; scrollbar-width: none;
+    background: rgba(255,255,255,0.02) !important; /* leggermente più scuro */
+    padding: 0 6px !important;                      /* ridotto al minimo */
+    gap: 2px !important;                             /* meno spazio tra tab */
+    border-bottom: 1px solid rgba(255,255,255,0.05) !important;
+    overflow-x: auto;
+    scrollbar-width: none;
 }
 [data-testid="stTabs"] [role="tablist"]::-webkit-scrollbar { display: none; }
+
 [data-testid="stTabs"] button {
-    font-family: -apple-system, sans-serif !important; font-size: 13px !important;
-    font-weight: 500 !important; color: rgba(255,255,255,0.35) !important;
-    border-bottom: 2px solid transparent !important; border-radius: 0 !important;
-    padding: 14px 14px !important; letter-spacing: 0 !important;
-    text-transform: none !important; white-space: nowrap !important;
-    background: transparent !important; transition: color 0.2s !important;
+    font-family: -apple-system, sans-serif !important;
+    font-size: 10px !important;       /* ancora più piccolo */
+    font-weight: 500 !important;
+    color: rgba(255,255,255,0.35) !important;
+    border-bottom: 2px solid transparent !important;
+    border-radius: 0 !important;
+    padding: 4px 8px !important;      /* compatto verticale e orizzontale */
+    letter-spacing: 0 !important;
+    text-transform: none !important;
+    white-space: nowrap !important;
+    background: transparent !important;
+    transition: color 0.2s !important;
 }
-[data-testid="stTabs"] button:hover { color: rgba(255,255,255,0.65) !important; }
+
+[data-testid="stTabs"] button:hover {
+    color: rgba(255,255,255,0.6) !important;
+}
+
 [data-testid="stTabs"] button[aria-selected="true"] {
-    color: #63B3ED !important; border-bottom: 2px solid #63B3ED !important; font-weight: 700 !important;
+    color: #FFD60A !important;          /* giallo tennis */
+    border-bottom: 2px solid #FFD60A !important;
+    font-weight: 700 !important;
 }
-[data-testid="stTabs"] [role="tabpanel"] { padding: 0 !important; background: transparent !important; }
+
+[data-testid="stTabs"] [role="tabpanel"] {
+    padding: 0 !important;
+    background: transparent !important;
+}
 
 /* ── SECTION LABEL ── */
 .sec-lbl {
@@ -179,7 +200,7 @@ p { color: rgba(255,255,255,0.5); font-size: 14px; }
 [data-testid="stDataFrame"] { background: rgba(255,255,255,0.04) !important; border-radius: 12px !important; margin: 0 16px !important; }
 /* ── BUTTON ── */
 .stButton > button {
-    background: rgba(255,255,255,0.08) !important;
+    background: rgba(255,255,255,0.1) !important;
     color: #F5F5F7 !important;
     border: 1px solid rgba(255,255,255,0.15) !important;
     border-radius: 10px !important;
