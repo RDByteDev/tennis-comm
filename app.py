@@ -649,9 +649,7 @@ with tab4:
 <div class="prog-bar">
 <div class="prog-fill" style="width:{pct}%"></div>
 </div>
-</div>
-{leader_card}
-</div>
+
 """,
             unsafe_allow_html=True
         )
