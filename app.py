@@ -446,16 +446,6 @@ with col_ref:
     if st.button("↻ Aggiorna"):
         load_csv.clear()
         # st.rerun()
-# ─── STAT STRIP ──────────────────────────────────────────────────────────────────
-leader_card = ""
-if leader is not None:
-    leader_card = (
-        '<div class="scard">'
-        '<div class="scard-num">'
-        f'{leader["Giocatore"]}</div>'
-        f'<div class="scard-lbl">🏆 Leader con {leader["Pts"]} pt</div>'
-        '</div>'
-    )
 
 # ─── TABS ─────────────────────────────────────────────────────────────────────────
 # Added "Finali" to the tab list
