@@ -70,7 +70,7 @@ html, body, [class*="css"], .stApp {
     content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
     background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
 }
-.scard-num { font-size: 13px; font-weight: 700; letter-spacing: -0.5px; line-height: 1; }
+.scard-num { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; line-height: 1; }
 .scard-lbl { font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 4px; }
 .prog-bar { height: 3px; background: rgba(255,255,255,0.08); border-radius: 2px; margin-top: 8px; overflow: hidden; }
 .prog-fill { height: 3px; border-radius: 2px; background: linear-gradient(90deg, #63B3ED, #9F7AEA); }
