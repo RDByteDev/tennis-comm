@@ -256,9 +256,38 @@ def compute_standings(df) -> pd.DataFrame:
                 elif b > a: s[p2]["SV"] += 1; s[p1]["SS"] += 1
                 s[p1]["GV"] += a; s[p1]["GS"] += b
                 s[p2]["GV"] += b; s[p2]["GS"] += a
-    rows = [{"Giocatore":p, "PG":v["PG"], "V":v["V"], "S":v["S"],
-             "Pts":v["V"]*3, "Set+":v["SV"], "Set-":v["SS"],
-             "Game+":v["GV"], "Game-":v["GS"]} for p,v in s.items()]
+    rows = []
+    for p, v in s.items():
+        pts = 0
+        # Calcolo dei punti partita
+        played_matches = df[((df["player1"] == p) | (df["player2"] == p)) & (df["vincitore"].apply(clean) != "")]
+        for _, r in played_matches.iterrows():
+            w, p1, p2 = clean(r["vincitore"]), r["player1"], r["player2"]
+            l = p2 if w == p1 else p1
+            sets_played = [parse_set(clean(r.get(c, ""))) for c in ["set1", "set2", "set3"]]
+            sets_won = sum(1 for s in sets_played if s and ((s[0] > s[1] and p == p1) or (s[1] > s[0] and p == p2)))
+            sets_lost = sum(1 for s in sets_played if s and ((s[0] < s[1] and p == p1) or (s[1] < s[0] and p == p2)))
+
+            if p == w:  # vincitore
+                if sets_won == 2 and sets_lost == 0:
+                    pts += 3
+                elif sets_won == 2 and sets_lost == 1:
+                    pts += 2
+            else:  # sconfitto
+                if sets_won == 1 and sets_lost == 2:
+                    pts += 1
+                # 0 punti se perde 0-2
+        rows.append({
+            "Giocatore": p,
+            "PG": v["PG"],
+            "V": v["V"],
+            "S": v["S"],
+            "Pts": pts,
+            "Set+": v["SV"],
+            "Set-": v["SS"],
+            "Game+": v["GV"],
+            "Game-": v["GS"]
+        })
     return pd.DataFrame(rows).sort_values(["Pts","V","Set+","Game+"], ascending=False).reset_index(drop=True)
 
 RANK_ICON  = {0:"🥇", 1:"🥈", 2:" 🥉 ", 3:" 🏅"}
